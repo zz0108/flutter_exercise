@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const DemoApp2());
+  runApp(const MaterialApp(home: DemoApp2(),));
 }
 
 class DemoApp2 extends StatefulWidget {
@@ -14,6 +15,8 @@ class DemoApp2 extends StatefulWidget {
 class _DemoApp2State extends State<DemoApp2> {
 
   int count = 0;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -27,26 +30,58 @@ class _DemoApp2State extends State<DemoApp2> {
             ),
             backgroundColor: primaryColor,
           ),
-          body: Center(
+          body: Container(
+            margin: const EdgeInsets.all(20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(onPressed: printClick, child: const Text("Button")),
-                Text(count.toString(),textDirection: TextDirection.ltr,)
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(hintText: "Email"),),
+                TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(hintText: "Password"),),
+                TextButton(onPressed: (){
+                  if (kDebugMode) {
+                    print(emailController.text);
+                    print(passwordController.text);
+                  }
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DemoPage(email: emailController.text,password: passwordController.text,)));
+                }, child: const Text("Login")),
               ],
             ),
           ),
         )
     );
   }
+}
 
-  void printClick(){
-    setState(() {
-      count++;
-    });
+class DemoPage extends StatefulWidget {
+  final String email;
+  final String password;
+
+  // 更新構造函數以接收 `data` 參數
+  const DemoPage({super.key, required this.email,required this.password});
+
+  @override
+  State<DemoPage> createState() => _DemoPageState();
+}
+
+class _DemoPageState extends State<DemoPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Page"),
+      ),
+      body: Center(
+        child: Text("Email : ${widget.email} , Password : ${widget.password} "),
+      ),
+    );
   }
 }
+
 
 
 class DemoApp extends StatelessWidget {
